@@ -100,8 +100,8 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: 'us-east-1'
-      - name: Test Cloudformation against Cloud One
-        uses: raphabot/conformity-template-scanner-pipeline@version
+      - name: Cloud One Infrastructure as Code Scanner
+        uses: raphabot/conformity-template-scanner-pipeline@v1.0.0
         env:
           cc_apikey: ${{ secrets.CLOUD_ONE_APIKEY }}
           maxExtreme: 1000
