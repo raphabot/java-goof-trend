@@ -66,6 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
+      - uses: actions/checkout@v2
       - name: Cloud One Container Security Scan Action
         uses: felipecosta09/Deep-Security-Smart-Check-Scan-Action@v1.0.2
         with:
@@ -91,6 +92,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
+      - uses: actions/checkout@v2
       - name: Generates Cloudformation
         uses: youyo/aws-cdk-github-actions@v2
         with:
@@ -117,6 +119,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
+      - uses: actions/checkout@v2
       - name: Deploy to AWS
         uses: youyo/aws-cdk-github-actions@v2
         with:
