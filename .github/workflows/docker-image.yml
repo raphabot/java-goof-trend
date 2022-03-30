@@ -83,3 +83,12 @@ jobs:
           # DSSC_PREREGISTRY_PASSWORD: 12345
           # DSSC_RESULTS_FILE: /results.json
           # DSSC_FINDINGS_THRESHOLD: '{"malware": 100, "vulnerabilities": { "defcon1": 100, "critical": 100, "high": 100 }, "contents": { "defcon1": 100, "critical": 100, "high": 100 }, "checklists": { "defcon1": 100, "critical": 100, "high": 100 }}'
+  deploy:
+    needs: image-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - name: Deploy container to Fargate
+        run: |
+          echo "Deploying to Fargate..."
+          echo "Deployed!"
