@@ -86,12 +86,43 @@ jobs:
           # DSSC_PREREGISTRY_PASSWORD: 12345
           # DSSC_RESULTS_FILE: /results.json
           # DSSC_FINDINGS_THRESHOLD: '{"malware": 100, "vulnerabilities": { "defcon1": 100, "critical": 100, "high": 100 }, "contents": { "defcon1": 100, "critical": 100, "high": 100 }, "checklists": { "defcon1": 100, "critical": 100, "high": 100 }}'
-  deploy:
+  infra-test:
     needs: image-test
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
-      - name: Deploy container to Fargate
-        run: |
-          echo "Deploying to Fargate..."
-          echo "Deployed!"
+      - name: Generates Cloudformation
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'synth'
+          working_dir: 'infra'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'us-east-1'
+      - name: Test Cloudformation against Cloud One
+        uses: raphabot/conformity-template-scanner-pipeline@version
+        env:
+          cc_apikey: ${{ secrets.CLOUD_ONE_APIKEY }}
+          maxExtreme: 1000
+          maxVeryHigh: 1000
+          maxHigh: 1000
+          maxMedium: 1000
+          maxLow: 1000
+          cc_region: us-east-2
+          templatePath: infra/cdk.out/InfraStack.template.json
+          cc_output_results: true
+  deploy:
+    needs: infra-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - name: Deploy to AWS
+        uses: youyo/aws-cdk-github-actions@v2
+        with:
+          cdk_subcommand: 'deploy'
+          working_dir: 'infra'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'us-east-1'
