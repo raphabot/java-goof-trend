@@ -7,7 +7,7 @@ COPY cert.pem /usr/src/goof
 COPY key.pem /usr/src/goof
 WORKDIR /usr/src/goof
 
-ENV JAVA_TOOL_OPTIONS=-javaagent:/usr/src/goof/trend_app_protect-4.4.5.jar
+ENV JAVA_TOOL_OPTIONS=-javaagent:/usr/src/goof/trend_app_protect-4.4.6.jar
 ENV TREND_AP_KEY=
 ENV TREND_AP_SECRET=
 ENV TREND_AP_LOG_FILE=STDERR
